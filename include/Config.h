@@ -11,8 +11,6 @@ const char pass[] = "";
 
 // --- System Constraints ---
 #define MAX_FEEDS 5 
-const float pHLevelThreshold = 8.0;
-const float waterOutDurationSec = 3.0; 
 
 // --- Hardware Pin Definitions ---
 const int feederServoPinOut = 14;
@@ -29,7 +27,7 @@ enum ShakeIntensity {
 };
 
 enum WaterChangeState {
-  MONITORING, 
+  IDLE, 
   DRAINING, 
   STABILIZING
 };

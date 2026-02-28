@@ -9,7 +9,7 @@ int cycles = 0;
 bool synced = false;
 float currentpHLevel = 0.0;
 float currentTemperature = 0.0;
-WaterChangeState currentWaterChangeState = MONITORING;
+WaterChangeState currentWaterChangeState = IDLE;
 
 unsigned long waterOutCooldownMs = 5 * 1000;
 int currentShakeIntensityConfig = 0;
@@ -20,7 +20,11 @@ int cooldownHours = 0;
 int cooldownMinutes = 0;
 int cooldownSeconds = 5;
 
-WaterChangeState previousWaterChangeState = MONITORING;
+float pHLevelThreshold = 8.0;
+float waterOutDurationSec = 3.0; 
+
+
+WaterChangeState previousWaterChangeState = IDLE;
 
 
 void updateCurrentShakeIntensity() {
@@ -101,7 +105,7 @@ void processWaterChangeState() {
     
     // Map the enum to a string for the console and the cloud
     switch(currentWaterChangeState) {
-      case MONITORING:  stateStr = "MONITORING";  break;
+      case IDLE:  stateStr = "IDLE";  break;
       case DRAINING:    stateStr = "DRAINING";    break;
       case STABILIZING: stateStr = "STABILIZING"; break;
     }
@@ -123,7 +127,7 @@ void processWaterChangeState() {
 
   
   switch (currentWaterChangeState) {
-    case MONITORING:
+    case IDLE:
       if (currentpHLevel > pHLevelThreshold) {
         currentWaterChangeState = DRAINING;
       }
@@ -133,7 +137,7 @@ void processWaterChangeState() {
       break;
     case STABILIZING:
       if (currentMillis - lastWaterOutTriggerTime >= waterOutCooldownMs) {
-        currentWaterChangeState = MONITORING;
+        currentWaterChangeState = IDLE;
       }
   }
 }

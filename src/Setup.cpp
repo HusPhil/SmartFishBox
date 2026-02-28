@@ -40,6 +40,14 @@ BLYNK_WRITE(V16) {
   updateCurrentShakeIntensity(); 
 }
 
+BLYNK_WRITE(V18) { 
+  pHLevelThreshold = param.asFloat(); 
+}
+
+BLYNK_WRITE(V19) { 
+  waterOutDurationSec = param.asInt(); 
+}
+
 BLYNK_CONNECTED() {
   Serial.println("[BLYNK] Connected to Cloud. Syncing datastreams...");
   Blynk.syncVirtual(V0,V1,V2,V3,V4,V5,V6,V7,V8,V9,V10); 

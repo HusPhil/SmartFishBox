@@ -12,7 +12,7 @@
 #include "Setup.h" 
 
 unsigned long lastTelemetryTime = 0;
-const unsigned long telemetryIntervalMs = 5000;
+const unsigned long telemetryIntervalMs = 1000;
 
 // --- Setup ---
 void setup() {

@@ -19,9 +19,14 @@ extern float currentTemperature;
 extern unsigned long waterOutCooldownMs;
 extern int currentShakeIntensityConfig;
 
+
 extern int cooldownHours;
 extern int cooldownMinutes;
 extern int cooldownSeconds;
+
+
+extern float pHLevelThreshold;
+extern float waterOutDurationSec; 
 
 
 
