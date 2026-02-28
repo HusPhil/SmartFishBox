@@ -11,7 +11,7 @@ float currentpHLevel = 0.0;
 float currentTemperature = 0.0;
 WaterChangeState currentWaterChangeState = MONITORING;
 
-unsigned long waterOutCooldownMs = 0;
+unsigned long waterOutCooldownMs = 5 * 1000;
 int currentShakeIntensityConfig = 0;
 
 ShakeIntensity currentShakeIntensity = WEAK;

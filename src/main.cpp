@@ -52,6 +52,7 @@ void loop() {
     if (synced) {
       sendCurrentPHLevel();
       sendCurrentTemperature();
+      Serial.println(waterOutCooldownMs);
     }
   }
 
