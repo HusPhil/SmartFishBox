@@ -41,16 +41,26 @@ BLYNK_WRITE(V16) {
 }
 
 BLYNK_WRITE(V18) { 
-  pHLevelThreshold = param.asFloat(); 
+  maxPHLevelThreshold = param.asFloat(); 
 }
 
 BLYNK_WRITE(V19) { 
   waterOutDurationSec = param.asInt(); 
 }
 
+BLYNK_WRITE(V20) { 
+  minPHLevelThreshold = param.asFloat(); 
+}
+
 BLYNK_CONNECTED() {
   Serial.println("[BLYNK] Connected to Cloud. Syncing datastreams...");
-  Blynk.syncVirtual(V0,V1,V2,V3,V4,V5,V6,V7,V8,V9,V10); 
+  
+  // Sync schedule pins
+  Blynk.syncVirtual(V0, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10); 
+  
+  // Sync the missing settings pins
+  Blynk.syncVirtual(V13, V14, V15, V16, V18, V19, V20); 
+  
   synced = true;
 }
 

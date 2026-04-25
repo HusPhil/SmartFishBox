@@ -20,16 +20,15 @@ int cooldownHours = 0;
 int cooldownMinutes = 0;
 int cooldownSeconds = 5;
 
-float pHLevelThreshold = 8.0;
-float waterOutDurationSec = 3.0; 
+float maxPHLevelThreshold = 8.0;
+float minPHLevelThreshold = 3.0;  
+float waterOutDurationSec = 120.0; 
 
 
 WaterChangeState previousWaterChangeState = IDLE;
 
 
 void updateCurrentShakeIntensity() {
-  Serial.print("currentShakeIntensityConfig: ");
-  Serial.println(currentShakeIntensityConfig);
   switch (currentShakeIntensityConfig) {
     case 0:
       currentShakeIntensity = WEAK;
@@ -57,6 +56,8 @@ void monitorTemperature() {
   int temperatureRawAnalogValue = analogRead(temperaturePinIn);
   currentTemperature = temperatureRawAnalogValue * (14.0 / 4095.0);
 }
+
+
 
 void timedWaterOut() {
   unsigned long currentMillis = millis();
@@ -128,9 +129,9 @@ void processWaterChangeState() {
   
   switch (currentWaterChangeState) {
     case IDLE:
-      if (currentpHLevel > pHLevelThreshold) {
-        currentWaterChangeState = DRAINING;
-      }
+      if (currentpHLevel > maxPHLevelThreshold || currentpHLevel < minPHLevelThreshold) {
+    currentWaterChangeState = DRAINING;
+}
       break;
     case DRAINING:
       timedWaterOut();

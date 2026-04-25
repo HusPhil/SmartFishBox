@@ -25,7 +25,8 @@ extern int cooldownMinutes;
 extern int cooldownSeconds;
 
 
-extern float pHLevelThreshold;
+extern float maxPHLevelThreshold;
+extern float minPHLevelThreshold;
 extern float waterOutDurationSec; 
 
 
