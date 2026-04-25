@@ -9,6 +9,8 @@ int cycles = 0;
 bool synced = false;
 float currentpHLevel = 0.0;
 float currentTemperature = 0.0;
+float neutralVoltage = 2.53;   // Voltage at pH 7
+float sensitivity = 0.18;      // Voltage change per pH unit
 WaterChangeState currentWaterChangeState = IDLE;
 
 unsigned long waterOutCooldownMs = 5 * 1000;
@@ -24,6 +26,17 @@ float maxPHLevelThreshold = 8.0;
 float minPHLevelThreshold = 3.0;  
 float waterOutDurationSec = 120.0; 
 
+//add averaging for pH level readings to stabilize the value
+float readPHLevelVoltage() {
+  float voltage = 0;
+  for (int i = 0; i < 50; i++) {
+      voltage += analogRead(pHLevelPinIn) * (3.3 / 4095.0);
+      delay(10);
+  }
+  voltage = voltage / 50; // This is your stable average
+
+  return voltage;
+}
 
 WaterChangeState previousWaterChangeState = IDLE;
 
@@ -48,8 +61,22 @@ void calculateDynamicCooldown() {
 }
 
 void monitorPHLevel() {
-  int pHLebelRawAnalogValue = analogRead(pHLevelPinIn);
-  currentpHLevel = pHLebelRawAnalogValue * (14.0 / 4095.0); 
+  int pHLevelRawAnalogValue  = analogRead(pHLevelPinIn);
+  float voltage = readPHLevelVoltage();
+
+  // Serial.print("Raw: ");
+  // Serial.println(pHLevelRawAnalogValue);
+
+  currentpHLevel = 7 + (neutralVoltage - voltage) / sensitivity;
+
+  Serial.print("Raw: ");
+  Serial.println(pHLevelRawAnalogValue);
+
+  Serial.print("Voltage: ");
+  Serial.println(voltage, 3);
+
+  Serial.print("pH Level: ");
+  Serial.println(currentpHLevel, 2);
 }
 
 void monitorTemperature() {
@@ -124,6 +151,7 @@ void processWaterChangeState() {
   }
   monitorPHLevel();
   monitorTemperature();
+  delay(1500); // Short delay to ensure pH level is updated before temperature monitoring
   unsigned long currentMillis = millis();
 
   
