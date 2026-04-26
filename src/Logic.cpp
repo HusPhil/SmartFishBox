@@ -18,6 +18,9 @@ int currentShakeIntensityConfig = 0;
 
 ShakeIntensity currentShakeIntensity = WEAK;
 
+int feedNow = 0; // Flag to trigger immediate feeding from the cloud
+bool manualTriggered = false;
+
 int cooldownHours = 0;
 int cooldownMinutes = 0;
 int cooldownSeconds = 5;
@@ -103,7 +106,18 @@ void timedWaterOut() {
 void processFeedingSchedule() {
   struct tm timeinfo;
   
-  // 10ms timeout prevents loop blocking if NTP drops
+  // --- 1. HANDLE MANUAL BLYNK TRIGGER ---
+  if (feedNow == 1) {
+    if (!manualTriggered) {
+      Serial.println("Action: Manual Feeding Triggered via Blynk");
+      shakeFeederServo(currentShakeIntensity);
+      manualTriggered = true; // Prevent re-triggering until button is released
+    }
+  } else {
+    manualTriggered = false; // Reset when Blynk value returns to 0
+  }
+
+  // --- 2. HANDLE SCHEDULED FEEDING ---
   if (synced && getLocalTime(&timeinfo, 10)) {
     int currentHour = timeinfo.tm_hour;
     int currentMinute = timeinfo.tm_min;
@@ -117,15 +131,16 @@ void processFeedingSchedule() {
           Serial.println(i + 1);
           
           shakeFeederServo(currentShakeIntensity); 
-          
           alreadyTriggered[i] = true; 
         }
       } else {
+        // Reset the flag once the minute has passed
         alreadyTriggered[i] = false;
       }
     }
   }
 }
+
 
 void processWaterChangeState() {
   if (previousWaterChangeState != currentWaterChangeState) {

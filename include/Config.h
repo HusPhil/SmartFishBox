@@ -6,8 +6,8 @@
 #define BLYNK_AUTH_TOKEN "MPC1bNbuaj-0-ksdiwBn4j6q5DHCYR5u"
 #define BLYNK_PRINT Serial
 
-const char ssid[] = "GFiber_6E19E";
-const char pass[] = "8t393nKC";
+const char ssid[] = "Wokwi-GUEST";
+const char pass[] = "";
 
 // --- System Constraints ---
 #define MAX_FEEDS 5 
