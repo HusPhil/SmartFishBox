@@ -13,8 +13,8 @@ const char pass[] = "";
 #define MAX_FEEDS 5 
 
 // --- Hardware Pin Definitions ---
-const int feederServoPinOut = 14;
-const int waterOutServoPinOut = 16;
+const int feederServoPinOut = 16;
+const int waterOutServoPinOut = 14;
 const int pHLevelPinIn = 33;
 const int temperaturePinIn = 32;
 

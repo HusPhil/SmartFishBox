@@ -28,16 +28,16 @@
     [ "esp:RX", "$serialMonitor:TX", "", [] ],
     [ "servo1:GND", "esp:GND.1", "black", [ "v0" ] ],
     [ "servo1:V+", "esp:5V", "red", [ "v0" ] ],
-    [ "servo1:PWM", "esp:14", "green", [ "v0" ] ],
     [ "servo2:GND", "esp:GND.3", "black", [ "v0" ] ],
-    [ "servo2:PWM", "esp:16", "green", [ "v0" ] ],
     [ "servo2:V+", "esp:5V", "red", [ "v-28.8", "h-144.1" ] ],
     [ "pot2:GND", "esp:GND.1", "black", [ "h0" ] ],
     [ "pot1:GND", "esp:GND.1", "black", [ "h76.8", "v-76.8" ] ],
     [ "pot2:VCC", "esp:5V", "red", [ "h67.2", "v68" ] ],
     [ "pot1:VCC", "esp:5V", "red", [ "h67.2", "v-8.8" ] ],
     [ "pot2:SIG", "esp:32", "green", [ "h76.8", "v0.4" ] ],
-    [ "esp:33", "pot1:SIG", "green", [ "h-76.65", "v124.8" ] ]
+    [ "esp:33", "pot1:SIG", "green", [ "h-76.65", "v124.8" ] ],
+    [ "servo1:PWM", "esp:16", "green", [ "v-28.8", "h172.6", "v-96" ] ],
+    [ "servo2:PWM", "esp:14", "green", [ "v-38.4", "h-134.6", "v-86.4" ] ]
   ],
   "dependencies": {}
 }
