@@ -105,6 +105,11 @@ void runCloud() {
 }
 
 
+void resetFeedNowFlag() {
+  feedNow = 0;
+  Blynk.virtualWrite(V21, feedNow);
+}
+
 void sendCurrentPHLevel(){
   Blynk.virtualWrite(V11, currentpHLevel);
 };

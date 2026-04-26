@@ -108,13 +108,15 @@ void processFeedingSchedule() {
   
   // --- 1. HANDLE MANUAL BLYNK TRIGGER ---
   if (feedNow == 1) {
-    if (!manualTriggered) {
-      Serial.println("Action: Manual Feeding Triggered via Blynk");
-      shakeFeederServo(currentShakeIntensity);
-      manualTriggered = true; // Prevent re-triggering until button is released
-    }
-  } else {
-    manualTriggered = false; // Reset when Blynk value returns to 0
+    Serial.println("Action: Manual Feeding Triggered via Blynk");
+    
+    // Perform the action
+    shakeFeederServo(currentShakeIntensity);
+    
+    // Reset the local variable immediately
+    feedNow = 0; 
+    
+    resetFeedNowFlag(); // Ensure the flag is reset in the cloud as well
   }
 
   // --- 2. HANDLE SCHEDULED FEEDING ---
@@ -134,13 +136,11 @@ void processFeedingSchedule() {
           alreadyTriggered[i] = true; 
         }
       } else {
-        // Reset the flag once the minute has passed
         alreadyTriggered[i] = false;
       }
     }
   }
 }
-
 
 void processWaterChangeState() {
   if (previousWaterChangeState != currentWaterChangeState) {
