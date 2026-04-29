@@ -175,8 +175,6 @@ void processWaterChangeState() {
         
         if (changeWaterNow == 1) {
             Serial.println("Action: Manual Water Change Triggered via Blynk");
-            changeWaterNow = 0;      // Reset local flag
-            resetChangeWaterNowFlag(); // Reset remote Blynk flag
         } else {
             Serial.println("Action: Auto Water Change Triggered by pH Level");
         }
