@@ -20,6 +20,7 @@ extern unsigned long waterOutCooldownMs;
 extern int currentShakeIntensityConfig;
 
 extern int feedNow; // Flag to trigger immediate feeding from the cloud
+extern int changeWaterNow; // Flag to trigger immediate water change from the cloud
 
 extern int cooldownHours;
 extern int cooldownMinutes;

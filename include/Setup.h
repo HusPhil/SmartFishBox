@@ -7,6 +7,7 @@ void connectWifi();
 void runCloud();
 
 void resetFeedNowFlag();
+void resetChangeWaterNowFlag();
 
 void sendCurrentPHLevel();
 void sendCurrentTemperature();

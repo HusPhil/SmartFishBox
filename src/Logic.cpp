@@ -19,6 +19,7 @@ int currentShakeIntensityConfig = 0;
 ShakeIntensity currentShakeIntensity = WEAK;
 
 int feedNow = 0; // Flag to trigger immediate feeding from the cloud
+int changeWaterNow = 0; // Flag to trigger immediate water change from the cloud
 bool manualTriggered = false;
 
 int cooldownHours = 0;
@@ -143,46 +144,61 @@ void processFeedingSchedule() {
 }
 
 void processWaterChangeState() {
+  // --- 1. HANDLE STATE TRANSITION LOGGING & CLOUD SYNC ---
   if (previousWaterChangeState != currentWaterChangeState) {
     String stateStr = "";
-    
-    // Map the enum to a string for the console and the cloud
     switch(currentWaterChangeState) {
-      case IDLE:  stateStr = "IDLE";  break;
+      case IDLE:        stateStr = "IDLE";        break;
       case DRAINING:    stateStr = "DRAINING";    break;
       case STABILIZING: stateStr = "STABILIZING"; break;
     }
-
     Serial.print("Water Change State: ");
     Serial.println(stateStr);
-    
-    // Only transmit to the cloud if the system is currently connected
+
     if (synced) {
       sendCurrentWaterChangeState(stateStr);
     }
-    
-    // Lock the state tracker to prevent further transmissions until the next change
     previousWaterChangeState = currentWaterChangeState;
   }
+
+  // --- 2. SENSOR MONITORING ---
   monitorPHLevel();
   monitorTemperature();
-  delay(1500); // Short delay to ensure pH level is updated before temperature monitoring
+  delay(1500); 
   unsigned long currentMillis = millis();
 
-  
+  // --- 3. STATE MACHINE LOGIC ---
   switch (currentWaterChangeState) {
     case IDLE:
-      if (currentpHLevel > maxPHLevelThreshold || currentpHLevel < minPHLevelThreshold) {
-    currentWaterChangeState = DRAINING;
-}
+      // Check for Manual Blynk Trigger OR pH Threshold Breach
+      if (changeWaterNow == 1 || currentpHLevel > maxPHLevelThreshold || currentpHLevel < minPHLevelThreshold) {
+        
+        if (changeWaterNow == 1) {
+            Serial.println("Action: Manual Water Change Triggered via Blynk");
+            changeWaterNow = 0;      // Reset local flag
+            resetChangeWaterNowFlag(); // Reset remote Blynk flag
+        } else {
+            Serial.println("Action: Auto Water Change Triggered by pH Level");
+        }
+
+        currentWaterChangeState = DRAINING;
+      }
       break;
+
     case DRAINING:
       timedWaterOut();
       break;
+
     case STABILIZING:
+      // Ensure we clear the manual flag if it was pressed while already draining/stabilizing
+      if (changeWaterNow == 1) {
+          changeWaterNow = 0;
+          resetChangeWaterNowFlag();
+      }
+
       if (currentMillis - lastWaterOutTriggerTime >= waterOutCooldownMs) {
         currentWaterChangeState = IDLE;
       }
+      break;
   }
 }
-

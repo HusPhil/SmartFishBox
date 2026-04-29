@@ -56,6 +56,10 @@ BLYNK_WRITE(V21) {
   feedNow = param.asInt(); // Set the flag to trigger immediate feeding in the main loop
 }
 
+BLYNK_WRITE(V22) { 
+  changeWaterNow = param.asInt(); // Set the flag to trigger immediate water change in the main loop
+}
+
 
 BLYNK_CONNECTED() {
   Serial.println("[BLYNK] Connected to Cloud. Syncing datastreams...");
@@ -64,7 +68,7 @@ BLYNK_CONNECTED() {
   Blynk.syncVirtual(V0, V1, V2, V3, V4, V5, V6, V7, V8, V9, V10); 
   
   // Sync the missing settings pins
-  Blynk.syncVirtual(V13, V14, V15, V16, V18, V19, V20, V21); 
+  Blynk.syncVirtual(V13, V14, V15, V16, V18, V19, V20, V21, V22); 
   
   synced = true;
 }
@@ -108,6 +112,11 @@ void runCloud() {
 void resetFeedNowFlag() {
   feedNow = 0;
   Blynk.virtualWrite(V21, feedNow);
+}
+
+void resetChangeWaterNowFlag() {
+  changeWaterNow = 0;
+  Blynk.virtualWrite(V22, changeWaterNow);
 }
 
 void sendCurrentPHLevel(){
